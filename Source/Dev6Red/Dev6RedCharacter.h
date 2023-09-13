@@ -42,9 +42,14 @@ class ADev6RedCharacter : public ACharacter
 	
 public:
 	ADev6RedCharacter();
-
+	UPROPERTY(BlueprintReadOnly, Category ="Gameplay")
+	int score = 0; 
 	UPROPERTY(BlueprintReadOnly, Category="Gameplay")
 	bool bIsCarryObjective;
+	UFUNCTION(BlueprintCallable, Category = "Gameplay")
+	void CompleteLevel();
+	UPROPERTY(BlueprintReadOnly, Category="Gameplay")
+	bool levelComplete;
 
 protected:
 	virtual void BeginPlay();
@@ -58,6 +63,9 @@ public:
 	/** Bool for AnimBP to switch to another animation set */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Weapon)
 	bool bHasRifle;
+
+	UFUNCTION(BlueprintCallable, Category = "Gameplay")
+	void AddScore(int Amount);
 
 	/** Setter to set the bool */
 	UFUNCTION(BlueprintCallable, Category = Weapon)

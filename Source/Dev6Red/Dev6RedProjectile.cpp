@@ -1,6 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "Dev6RedProjectile.h"
+
+#include "Dev6RedCharacter.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -38,9 +40,16 @@ void ADev6RedProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor,
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherComp->IsSimulatingPhysics())
 	{
 		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
-
 		Destroy();
 	}
 
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionEffect, GetActorLocation());
+}
+
+void ADev6RedProjectile::ObjectiveHit()
+{
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this,0);
+	ADev6RedCharacter* Player = Cast<ADev6RedCharacter>(PlayerController->GetPawn());
+	Player->bIsCarryObjective = true;
+	Player->AddScore(1);
 }

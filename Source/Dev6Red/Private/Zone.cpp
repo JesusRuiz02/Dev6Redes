@@ -1,15 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ObjectiveActor.h"
+#include "Zone.h"
 
 #include "Components/SphereComponent.h"
 #include "Dev6Red/Dev6RedCharacter.h"
-#include "Dev6Red/Dev6RedProjectile.h"
-#include "Kismet/GameplayStatics.h"
 
 // Sets default values
-AObjectiveActor::AObjectiveActor()
+AZone::AZone()
 {
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
 	MeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -19,39 +17,31 @@ AObjectiveActor::AObjectiveActor()
 	SphereComp->SetCollisionResponseToChannels(ECR_Ignore);
 	SphereComp->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 	SphereComp->SetupAttachment(MeshComp);
-
 }
 
+
+
 // Called when the game starts or when spawned
-void AObjectiveActor::BeginPlay()
+void AZone::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
-void AObjectiveActor::PlayEffect()
-{
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), PickUpFX, GetActorLocation());
-}
-
-
-void AObjectiveActor::NotifyActorBeginOverlap(AActor* OtherActor)
+void AZone::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
-	PlayEffect();
-	ADev6RedProjectile* Projectile = Cast<ADev6RedProjectile>(OtherActor);
-	//ADev6RedProjectile* MyProjectile = Cast<ADev6RedProjectile>(OtherActor);
-	if (ADev6RedProjectile* MyProjectile = Cast<ADev6RedProjectile>(OtherActor))
+	ADev6RedCharacter* Player = Cast<ADev6RedCharacter>(OtherActor);
+
+	if (Player)
 	{
-		Destroy();
-		Projectile->ObjectiveHit();
-		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Green, "Funciona");
+		if (Player->score >= 5)
+		{
+			Player->CompleteLevel();
+		}
 	}
-	else
-	{
-		PlayEffect();
-	}
-	
-	
 }
+
+
+
 

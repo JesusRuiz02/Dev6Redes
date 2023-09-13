@@ -72,6 +72,11 @@ void ADev6RedCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 	}
 }
 
+void ADev6RedCharacter::CompleteLevel()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Green, "Completaste el nivel");
+	levelComplete = true;
+}
 
 void ADev6RedCharacter::Move(const FInputActionValue& Value)
 {
@@ -97,6 +102,11 @@ void ADev6RedCharacter::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void ADev6RedCharacter::AddScore(int Amount)
+{
+	score += Amount;
 }
 
 void ADev6RedCharacter::SetHasRifle(bool bNewHasRifle)
